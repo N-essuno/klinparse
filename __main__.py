@@ -1,4 +1,5 @@
 from CKYParser import CKYParser
+from resources import L1_GRAMMAR, L1_PHRASES, TOY_GRAMMAR, TOY_PHRASES
 
 
 def print_cky_matrix_pretty(matrix):
@@ -10,103 +11,18 @@ def print_cky_matrix_pretty(matrix):
     print("\n ---------------------------------------- \n")
 
 def test_dummy():
-    grammar = [
-        ("S", ["NP", "VP"]),
-        ("NP", ["Det", "N"]),
-        ("VP", ["V", "NP"]),
-        ("PP", ["P", "NP"]),
-        ("NP", ["NP", "PP"]),
-        ("Det", ["a"]),
-        ("Det", ["the"]),
-        ("N", ["dog"]),
-        ("N", ["cat"]),
-        ("N", ["rug"]),
-        ("V", ["chased"]),
-        ("P", ["in"]),
-        ("P", ["on"]),
-        ("P", ["by"])
-    ]
-
-    parser = CKYParser(grammar)
+    parser = CKYParser(TOY_GRAMMAR)
     # print matrix in a pretty way
-    matrix = parser.parse(["a", "dog", "chased", "a", "cat"])
+    matrix = parser.parse(TOY_PHRASES[0])
     print_cky_matrix_pretty(matrix)
 
 def test_jurafsky():
-    phrase_1 = ["book", "the", "flight", "through", "Houston"]
-    phrase_2 = ["does", "she", "prefer", "a", "morning", "flight"]
+    parser = CKYParser(L1_GRAMMAR)
 
-    # L1 Jurafsky grammar in CNF
-
-    l1_grammar = [
-        # Rules for S
-        ("S", ["NP", "VP"]),
-        ("S", ["X1", "VP"]),
-        ("S", ["V", "NP"]),
-        ("S", ["X2", "PP"]),
-        ("S", ["V", "PP"]),
-        ("S", ["VP", "PP"]),
-        ("S", ["book"]),
-        ("S", ["prefer"]),
-
-        # Rules for X1
-        ("X1", ["Aux", "NP"]),
-
-        # Rules for NP
-        ("NP", ["Det", "Nominal"]),
-        ("NP", ["she"]),
-        ("NP", ["Houston"]),
-
-        # Rules for VP
-        ("VP", ["V", "NP"]),
-        ("VP", ["X2", "PP"]),
-        ("VP", ["V", "PP"]),
-        ("VP", ["VP", "PP"]),
-        ("VP", ["book"]),
-        ("VP", ["prefer"]),
-
-        # Rules for V
-        ("V", ["book"]),
-        ("V", ["prefer"]),
-
-        # Rules for PP
-        ("PP", ["P", "NP"]),
-
-        # Rules for X2
-        ("X2", ["V", "NP"]),
-
-        # Rules for Det
-        ("Det", ["the"]),
-        ("Det", ["a"]),
-
-        # Rules for Nominal
-        ("Nominal", ["Nominal", "Noun"]),
-        ("Nominal", ["Nominal", "PP"]),
-        ("Nominal", ["book"]),
-        ("Nominal", ["flight"]),
-        ("Nominal", ["morning"]),
-
-        # Rules for Noun
-        ("Noun", ["flight"]),
-        ("Noun", ["book"]),
-        ("Noun", ["morning"]),
-
-        # Rules for P
-        ("P", ["through"]),
-
-        # Rules for PN
-        ("PN", ["Houston"]),
-
-        # Rules for Aux
-        ("Aux", ["does"])
-    ]
-
-    parser = CKYParser(l1_grammar)
-
-    matrix = parser.parse(phrase_1)
+    matrix = parser.parse(L1_PHRASES[0])
     print_cky_matrix_pretty(matrix)
 
-    matrix = parser.parse(phrase_2)
+    matrix = parser.parse(L1_PHRASES[1])
     print_cky_matrix_pretty(matrix)
 
 
