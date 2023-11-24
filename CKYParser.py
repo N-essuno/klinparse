@@ -22,9 +22,9 @@ class CKYParser:
             table[j][j] = [tag for tag, derivation in self._grammar if derivation[0] == words[j]]
 
             # Fill the rest of the matrix. For each column j, we iterate over the rows i in reverse order.
-            for i in range(j - 2, -1, -1):
+            for i in range(j - 1, -1, -1):
                 # Iterate over the possible splits.
-                for k in range(i+1, j+1):
+                for k in range(i, j):
                     # Iterate over the possible derivations.
                     for tag, derivation in self._grammar:
                         # If the rule brings to a terminal (len(derivation) == 1), skip it.
@@ -33,15 +33,17 @@ class CKYParser:
                             right = derivation[1]
                             # Check if the derivation rule has as left child the tag in matrix[i][k] and as right child
                             #   the tag in matrix[k][j]. If so, add the tag to matrix[i][j].
-                            if left in table[i][k] and right in table[k][j]:
+                            if left in table[i][k] and right in table[k+1][j]:
                                 table[i][j].append(tag)
         return table
 
 
-def print_cky_matrix_pretty():
-    # each element on the left of the diagonal must be ignored in the print. They are
-    # always empty lists
-    pass
+def print_cky_matrix_pretty(matrix):
+    s = [[str(e) for e in row] for row in matrix]
+    lens = [max(map(len, col)) for col in zip(*s)]
+    fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
+    table = [fmt.format(*row) for row in s]
+    print('\n'.join(table))
 
 
 if __name__ == "__main__":
@@ -64,6 +66,7 @@ if __name__ == "__main__":
     parser = CKYParser(grammar)
     # print matrix in a pretty way
     matrix = parser.parse(["a", "dog", "chased", "a", "cat"])
-    for row in matrix:
-        print(row)
+    print_cky_matrix_pretty(matrix)
+    # for row in matrix:
+    #     print(row)
 
