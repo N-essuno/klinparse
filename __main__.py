@@ -95,7 +95,10 @@ def test_jurafsky():
         ("P", ["through"]),
 
         # Rules for PN
-        ("PN", ["Houston"])
+        ("PN", ["Houston"]),
+
+        # Rules for Aux
+        ("Aux", ["does"])
     ]
 
     parser = CKYParser(l1_grammar)
