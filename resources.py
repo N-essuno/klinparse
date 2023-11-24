@@ -86,3 +86,12 @@ L1_PHRASES = [
         ["does", "she", "prefer", "a", "morning", "flight"]
 ]
 # Klingon Resources
+KLINGON_GRAMMAR = [
+
+]
+KLINGON_PHRASES = [
+    ["tlhIngan", "Hol", "Dajatlh", "'a’"],
+    ["puq", "vIlegh", "jIH"],
+    ["pa'Daq", "jIHtaH"],
+    ["tlhIngan", "maH"]
+]
