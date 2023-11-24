@@ -34,6 +34,8 @@ class CKYParser:
                             # Check if the derivation rule has as left child the tag in matrix[i][k] and as right child
                             #   the tag in matrix[k][j]. If so, add the tag to matrix[i][j].
                             if left in table[i][k] and right in table[k+1][j]:
+                                if tag == "VP":
+                                    print(left, " - ", right)
                                 table[i][j].append(tag)
         return table
 
@@ -47,6 +49,72 @@ def print_cky_matrix_pretty(matrix):
 
 
 if __name__ == "__main__":
+    phrase_1 = ["book", "the", "flight", "through", "Houston"]
+    phrase_2 = ["does", "she", "prefer", "a", "morning", "flight"]
+
+    # L1 Jurafsky grammar in CNF
+
+    l1_grammar = [
+        # Rules for S
+        ("S", ["NP", "VP"]),
+        ("S", ["X1", "VP"]),
+        ("S", ["V", "NP"]),
+        ("S", ["X2", "PP"]),
+        ("S", ["V", "PP"]),
+        ("S", ["VP", "PP"]),
+        ("S", ["book"]),
+        ("S", ["prefer"]),
+
+        # Rules for X1
+        ("X1", ["Aux", "NP"]),
+
+        # Rules for NP
+        ("NP", ["Det", "Nominal"]),
+        ("NP", ["she"]),
+        ("NP", ["Houston"]),
+
+        # Rules for VP
+        ("VP", ["V", "NP"]),
+        ("VP", ["X2", "PP"]),
+        ("VP", ["V", "PP"]),
+        ("VP", ["VP", "PP"]),
+        ("VP", ["book"]),
+        ("VP", ["prefer"]),
+
+        # Rules for V
+        ("V", ["book"]),
+        ("V", ["prefer"]),
+
+        # Rules for PP
+        ("PP", ["P", "NP"]),
+
+        # Rules for X2
+        ("X2", ["V", "NP"]),
+
+        # Rules for Det
+        ("Det", ["the"]),
+        ("Det", ["a"]),
+
+        # Rules for Nominal
+        ("Nominal", ["Nominal", "Noun"]),
+        ("Nominal", ["Nominal", "PP"]),
+        ("Nominal", ["book"]),
+        ("Nominal", ["flight"]),
+        ("Nominal", ["morning"]),
+
+        # Rules for Noun
+        ("Noun", ["flight"]),
+        ("Noun", ["book"]),
+        ("Noun", ["morning"]),
+
+        # Rules for P
+        ("P", ["through"]),
+
+        # Rules for PN
+        ("PN", ["Houston"])
+    ]
+
+
     grammar = [
         ("S", ["NP", "VP"]),
         ("NP", ["Det", "N"]),
@@ -63,10 +131,20 @@ if __name__ == "__main__":
         ("P", ["on"]),
         ("P", ["by"])
     ]
-    parser = CKYParser(grammar)
-    # print matrix in a pretty way
-    matrix = parser.parse(["a", "dog", "chased", "a", "cat"])
+    # parser = CKYParser(grammar)
+    # # print matrix in a pretty way
+    # matrix = parser.parse(["a", "dog", "chased", "a", "cat"])
+    # print_cky_matrix_pretty(matrix)
+
+
+    parser = CKYParser(l1_grammar)
+
+    matrix = parser.parse(phrase_1)
     print_cky_matrix_pretty(matrix)
-    # for row in matrix:
-    #     print(row)
+
+    # print("\n\n\n")
+    #
+    # matrix = parser.parse(phrase_2)
+    # print_cky_matrix_pretty(matrix)
+
 
