@@ -87,11 +87,77 @@ L1_PHRASES = [
 ]
 # Klingon Resources
 KLINGON_GRAMMAR = [
+        # TERMINALS
+        # Nouns
+        ("Noun", ["tlhIngan Hol"]), # Klingon Language
+        ("Noun", ["puq"]), # child
+        ("Noun", ["pa'"]), # room
+        ("Noun", ["tlhIngan"]), # Klingon
+        # Noun Suffixes
+        ("NounSuffix", ["Daq"]), # In the proximity of (noun)
+        # Pronouns
+        ("Pronoun", ["jIH"]), # I
+        # Verbs
+        ("Verb", ["jatlh"]), # speak
+        ("Verb", ["legh"]), # see
+        ("Verb", ["jIH"]), # I (am)
+        ("Verb", ["maH"]), # we (are)
+        # Verb Prefixes
+        ("VerbPrefix", ["Da"]), # 2rd person singular subject - 3rd person singular object
+        ("VerbPrefix", ["vI"]), # 1st person singular subject - 3rd person singular object
+        # Verb Suffixes
+        ("VerbSuffix", ["'a'"]), # Interrogative suffix
+        ("VerbSuffix", ["taH"]), # (verb) occurs continuously E.g. I am staying
 
+        # NON-TERMINALS
+        # Verb Compounds - prefix
+        ("VerbCompound", ["VerbPrefix", "Verb"]),
+        ("VerbWithPrefix", ["VerbPrefix", "Verb"]),
+        ("VerbCompound", ["VerbWithPrefix", "VerbSuffix"]),
+        # Verb Compounds - suffix
+        ("VerbCompound", ["Verb", "VerbSuffix"]),
+        ("VerbWithSuffix", ["Verb", "VerbSuffix"]),
+        ("VerbCompound", ["VerbPrefix", "VerbWithSuffix"]),
+
+        # Noun Compounds
+        ("NounCompound", ["Noun", "NounSuffix"]),
+
+        # Verb Phrases
+        # TODO: check if this is correct
+        # ("NounVerb", ["NounCompound", "Verb"]),
+        # ("NounVerb", ["NounCompound", "VerbCompound"]),
+        # ("NounVerb", ["Noun", "Verb"]),
+        # ("NounVerb", ["Noun", "VerbCompound"]),
+
+        ("VerbNoun", ["VerbCompound", "Noun"]),
+        ("VerbNoun", ["VerbCompound", "NounCompound"]),
+        ("VerbNoun", ["Verb", "Noun"]),
+        ("VerbNoun", ["Verb", "NounCompound"]),
+
+        ("VerbNoun", ["Verb", "Pronoun"]),
+        ("VerbNoun", ["VerbCompound", "Pronoun"]),
+
+        # Sentences
+        # Simple sentences (NounVerb or VerbNoun)
+        ("Sentence", ["NounCompound", "Verb"]),
+        ("Sentence", ["NounCompound", "VerbCompound"]),
+        ("Sentence", ["Noun", "Verb"]),
+        ("Sentence", ["Noun", "VerbCompound"]),
+
+        ("Sentence", ["VerbCompound", "Noun"]),
+        ("Sentence", ["VerbCompound", "NounCompound"]),
+        ("Sentence", ["Verb", "Noun"]),
+        ("Sentence", ["Verb", "NounCompound"]),
+
+        ("Sentence", ["Verb", "Pronoun"]),
+        ("Sentence", ["VerbCompound", "Pronoun"]),
+
+        # Complex sentences (NounVerb + Noun or Noun + VerbNoun)
+        ("Sentence", ["Noun", "VerbNoun"])
 ]
 KLINGON_PHRASES = [
-    ["tlhIngan", "Hol", "Dajatlh", "'a’"],
-    ["puq", "vIlegh", "jIH"],
-    ["pa'Daq", "jIHtaH"],
+    ["tlhIngan Hol", "Da","jatlh", "'a'"],
+    ["puq", "vI", "legh", "jIH"],
+    ["pa'", "Daq", "jIH", "taH"],
     ["tlhIngan", "maH"]
 ]
