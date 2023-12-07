@@ -1,5 +1,5 @@
 from CKYParser import CKYParser
-from resources import L1_GRAMMAR, L1_PHRASES, TOY_GRAMMAR, TOY_PHRASES
+from resources import L1_GRAMMAR, L1_PHRASES, TOY_GRAMMAR, TOY_PHRASES, KLINGON_GRAMMAR, KLINGON_PHRASES
 
 
 def print_cky_matrix_pretty(matrix):
@@ -27,10 +27,22 @@ def test_jurafsky():
 
 
 def test_klingon():
-        pass
+    parser = CKYParser(KLINGON_GRAMMAR)
+
+    matrix = parser.parse(KLINGON_PHRASES[0])
+    print_cky_matrix_pretty(matrix)
+
+    matrix = parser.parse(KLINGON_PHRASES[1])
+    print_cky_matrix_pretty(matrix)
+
+    matrix = parser.parse(KLINGON_PHRASES[2])
+    print_cky_matrix_pretty(matrix)
+
+    matrix = parser.parse(KLINGON_PHRASES[3])
+    print_cky_matrix_pretty(matrix)
 
 
 if __name__ == "__main__":
-    test_dummy()
-    test_jurafsky()
+    # test_dummy()
+    # test_jurafsky()
     test_klingon()
