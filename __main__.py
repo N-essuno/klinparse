@@ -2,6 +2,7 @@ import sys
 
 from CKYParser import CKYParser
 from resources import L1_GRAMMAR, L1_PHRASES, TOY_GRAMMAR, TOY_PHRASES, KLINGON_GRAMMAR, KLINGON_PHRASES
+from nltk import load_parser
 
 
 def print_cky_matrix_pretty(matrix):
@@ -45,6 +46,21 @@ def test_klingon(print_matrix: bool):
     matrix = parser.parse(KLINGON_PHRASES[3], print_matrix)
     print_cky_matrix_pretty(matrix)
 
+def test_simple_sem():
+    sentence = "a dog chases a girl"
+    parse_with_semantics('file:simple-sem.fcfg', sentence)
+
+def test_klingon_sem():
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[0])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[1])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[2])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[3])
+
+def parse_with_semantics(grammar_url, sentence):
+    parser = load_parser(grammar_url, trace=0)
+    tokens = sentence.split()
+    for tree in parser.parse(tokens):
+        print(tree.label()['SEM'])
 
 if __name__ == "__main__":
     # get arg for printing matrix
@@ -54,6 +70,7 @@ if __name__ == "__main__":
         print("Invalid or missing argument for printing matrix: (should be 1=True or 0=False) defaulting to False\n")
         print_matrix = False
 
-    test_dummy(print_matrix)
-    test_jurafsky(print_matrix)
-    test_klingon(print_matrix)
+    # test_dummy(print_matrix)
+    # test_jurafsky(print_matrix)
+    # test_klingon(print_matrix)
+    test_simple_sem()
