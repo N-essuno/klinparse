@@ -25,9 +25,28 @@ Noun[NUM=sg,SEM=<\x.child(x)>] -> "puq"
 Noun[NUM=sg,SEM=<\x.room(x)>] -> "pa'"
 Noun[NUM=sg,SEM=<\x.klingon(x)>] -> "tlhIngan"
 
-IV[NUM=sg,SEM=<\x.speak(x)>,TNS=pres] -> "jatlh"
+# TODO: check
+NounSuffix[NUM=sg,SEM=<\x.in_proximity_of(x)>] -> "Daq"
+
+# TODO: check
+Pronoun[NUM=sg,SEM=<\P.P(i)>] -> "jIH"
+
+# IV[NUM=sg,SEM=<\x.speak(x)>,TNS=pres] -> "jatlh"
 IV[NUM=sg,SEM=<\x.i_am(x)>,TNS=pres] -> "jIH"
 IV[NUM=pl,SEM=<\x.we_are(x)>,TNS=pres] -> "maH"
 
 TV[NUM=sg,SEM=<\X x.X(\y.see(x,y))>,TNS=pres] -> "legh"
+TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh"
+
+# VerbPrefix[SEM=<\X x.X(\y.2nd_3rd(x,y))>,TNS=pres] -> "Da"
+# VerbPrefix[SEM=<\X x.X(\y.1st_3rd(x,y))>,TNS=pres] -> "vI"
+
+VerbPrefix[SEM=<\x.2nd_3rd(x)>] -> "Da"
+VerbPrefix[SEM=<\x.1st_3rd(x)>] -> "vI"
+
+VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'"
+VerbSuffix[SEM=<\x.continuous(x)>] -> "taH"
+
+# VerbCompound[NUM=sg,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=sg]
+# VerbCompound[NUM=pl,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=pl]
 
