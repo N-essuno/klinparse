@@ -52,15 +52,16 @@ def test_simple_sem():
 
 def test_klingon_sem():
     parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[0])
-    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[1])
-    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[2])
-    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[3])
+    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[1])
+    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[2])
+    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES[3])
 
 def parse_with_semantics(grammar_url, sentence):
     parser = load_parser(grammar_url, trace=0)
     tokens = sentence.split()
     for tree in parser.parse(tokens):
         print(tree.label()['SEM'])
+    print()
 
 if __name__ == "__main__":
     # get arg for printing matrix
@@ -74,3 +75,4 @@ if __name__ == "__main__":
     # test_jurafsky(print_matrix)
     # test_klingon(print_matrix)
     test_simple_sem()
+    # test_klingon_sem()
