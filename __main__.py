@@ -1,3 +1,5 @@
+import sys
+
 from CKYParser import CKYParser
 from resources import L1_GRAMMAR, L1_PHRASES, TOY_GRAMMAR, TOY_PHRASES, KLINGON_GRAMMAR, KLINGON_PHRASES
 
@@ -10,39 +12,48 @@ def print_cky_matrix_pretty(matrix):
     print('\n'.join(table))
     print("\n ---------------------------------------- \n")
 
-def test_dummy():
+
+def test_dummy(print_matrix: bool):
     parser = CKYParser(TOY_GRAMMAR)
     # print matrix in a pretty way
-    matrix = parser.parse(TOY_PHRASES[0])
+    matrix = parser.parse(TOY_PHRASES[0], print_matrix)
     print_cky_matrix_pretty(matrix)
 
-def test_jurafsky():
+
+def test_jurafsky(print_matrix: bool):
     parser = CKYParser(L1_GRAMMAR)
 
-    matrix = parser.parse(L1_PHRASES[0])
+    matrix = parser.parse(L1_PHRASES[0], print_matrix)
     print_cky_matrix_pretty(matrix)
 
-    matrix = parser.parse(L1_PHRASES[1])
+    matrix = parser.parse(L1_PHRASES[1], print_matrix)
     print_cky_matrix_pretty(matrix)
 
 
-def test_klingon():
+def test_klingon(print_matrix: bool):
     parser = CKYParser(KLINGON_GRAMMAR)
 
-    matrix = parser.parse(KLINGON_PHRASES[0])
+    matrix = parser.parse(KLINGON_PHRASES[0], print_matrix)
     print_cky_matrix_pretty(matrix)
 
-    matrix = parser.parse(KLINGON_PHRASES[1])
+    matrix = parser.parse(KLINGON_PHRASES[1], print_matrix)
     print_cky_matrix_pretty(matrix)
 
-    matrix = parser.parse(KLINGON_PHRASES[2])
+    matrix = parser.parse(KLINGON_PHRASES[2], print_matrix)
     print_cky_matrix_pretty(matrix)
 
-    matrix = parser.parse(KLINGON_PHRASES[3])
+    matrix = parser.parse(KLINGON_PHRASES[3], print_matrix)
     print_cky_matrix_pretty(matrix)
 
 
 if __name__ == "__main__":
-    # test_dummy()
-    # test_jurafsky()
-    test_klingon()
+    # get arg for printing matrix
+    try:
+        print_matrix = bool(int((sys.argv[1])))
+    except:
+        print("Invalid or missing argument for printing matrix: (should be 1=True or 0=False) defaulting to False\n")
+        print_matrix = False
+
+    test_dummy(print_matrix)
+    test_jurafsky(print_matrix)
+    test_klingon(print_matrix)
