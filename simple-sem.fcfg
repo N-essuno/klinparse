@@ -40,6 +40,8 @@ Det[SEM=<\P Q.exists x.(P(x) & Q(x))>] -> 'some'
 Det[NUM=sg,SEM=<\P Q.exists x.(P(x) & Q(x))>] -> 'a'
 Det[NUM=sg,SEM=<\P Q.exists x.(P(x) & Q(x))>] -> 'an'
 
+Det[NUM=sg,SEM=<\P Q.exists x.((P(x) & Q(x)) & all y.(P(y) -> (x = y)))>] -> 'the' | 'The'
+
 N[NUM=sg,SEM=<\x.man(x)>] -> 'man'
 N[NUM=sg,SEM=<\x.girl(x)>] -> 'girl'
 N[NUM=sg,SEM=<\x.boy(x)>] -> 'boy'
@@ -60,6 +62,8 @@ TV[NUM=sg,SEM=<\X x.X(\y.bite(x,y))>,TNS=pres] -> 'bites'
 TV[NUM=pl,SEM=<\X x.X(\y.bite(x,y))>,TNS=pres] -> 'bite'
 DTV[NUM=sg,SEM=<\Y X x.X(\z.Y(\y.give(x,y,z)))>,TNS=pres] -> 'gives'
 DTV[NUM=pl,SEM=<\Y X x.X(\z.Y(\y.give(x,y,z)))>,TNS=pres] -> 'give'
+
+Pro[num=pl, -reflex, case=nom, sem=pro] -> 'they'
 
 P[+to] -> 'to'
 
