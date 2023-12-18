@@ -20,19 +20,24 @@ PP[+TO, SEM=?np] -> P[+TO] NP[SEM=?np]
 # Lexical Rules
 #############################
 
-Noun[NUM=sg,SEM=<\x.klingon_language(x)>] -> "tlhIngan Hol"
-Noun[NUM=sg,SEM=<\x.child(x)>] -> "puq"
-Noun[NUM=sg,SEM=<\x.room(x)>] -> "pa'"
-Noun[NUM=sg,SEM=<\x.klingon(x)>] -> "tlhIngan"
+# These 2 expression capture the meaning that all the entities in the sentence
+#   that are of the same type (children or rooms) refer to the same entity
+#   It is the semantic representation of "the" before a noun
+Noun[NUM=sg,SEM=<\Q.exists x.((child(x) & Q(x)) & all y.(child(y) -> (x = y)))>] -> "puq"
+Noun[NUM=sg,SEM=<\Q.exists x.((room(x) & Q(x)) & all y.(room(y) -> (x = y)))>] -> "pa'"
+
+PropN[NUM=sg,SEM=<\P.P(klingon_language)>] -> "tlhIngan Hol"
+PropN[NUM=sg,SEM=<\P.P(klingon)>] -> "tlhIngan"
 
 # TODO: check
-NounSuffix[NUM=sg,SEM=<\x.in_proximity_of(x)>] -> "Daq"
+NounSuffix[NUM=sg,SEM=<\X x.X(\y.in_proximity_of(x,y)>] -> "Daq"
 
 # TODO: check
 Pronoun[NUM=sg,SEM=<\P.P(i)>] -> "jIH"
 
-# IV[NUM=sg,SEM=<\x.speak(x)>,TNS=pres] -> "jatlh"
-IV[NUM=sg,SEM=<\x.i_am(x)>,TNS=pres] -> "jIH"
+# Ee being(e, I) ^ in_proximity_of(e, room)
+
+IV[NUM=sg,SEM=<exists e.being(e,I)>,TNS=pres] -> "jIHtaH"
 IV[NUM=pl,SEM=<\x.we_are(x)>,TNS=pres] -> "maH"
 
 TV[NUM=sg,SEM=<\X x.X(\y.see(x,y))>,TNS=pres] -> "legh"
@@ -41,12 +46,14 @@ TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh"
 # VerbPrefix[SEM=<\X x.X(\y.2nd_3rd(x,y))>,TNS=pres] -> "Da"
 # VerbPrefix[SEM=<\X x.X(\y.1st_3rd(x,y))>,TNS=pres] -> "vI"
 
-VerbPrefix[SEM=<\x.2nd_3rd(x)>] -> "Da"
-VerbPrefix[SEM=<\x.1st_3rd(x)>] -> "vI"
+# Handling VerbPrefixes means we need to take care of SUBJ and OBJ NUM
+# VerbPrefix[SEM=<\x.2nd_3rd(x)>] -> "Da"
+# VerbPrefix[SEM=<\x.1st_3rd(x)>] -> "vI"
 
 VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'"
-VerbSuffix[SEM=<\x.continuous(x)>] -> "taH"
+
+# Mapping taH suffix means handling Verb tense, we are not doing that
+# VerbSuffix[SEM=<\x.continuous(x)>] -> "taH"
 
 # VerbCompound[NUM=sg,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=sg]
 # VerbCompound[NUM=pl,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=pl]
-
