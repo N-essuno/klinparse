@@ -37,11 +37,11 @@ Pronoun[NUM=sg,SEM=<\P.P(i)>] -> "jIH"
 
 # Ee being(e, I) ^ in_proximity_of(e, room)
 
-IV[NUM=sg,SEM=<exists e.being(e,I)>,TNS=pres] -> "jIHtaH"
-IV[NUM=pl,SEM=<\x.we_are(x)>,TNS=pres] -> "maH"
+IV[NUM=sg,SEM=<exists e.being(e,I)>,TNS=pres] -> "jIHtaH" # I am
+IV[NUM=pl,SEM=<\x.we_are(x)>,TNS=pres] -> "maH" # we are
 
-TV[NUM=sg,SEM=<\X x.X(\y.see(x,y))>,TNS=pres] -> "legh"
-TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh"
+TV[NUM=sg,SEM=<\X x.X(\y.see(x,y))>,TNS=pres] -> "legh" # to see
+TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh" # to speak
 
 # VerbPrefix[SEM=<\X x.X(\y.2nd_3rd(x,y))>,TNS=pres] -> "Da"
 # VerbPrefix[SEM=<\X x.X(\y.1st_3rd(x,y))>,TNS=pres] -> "vI"
@@ -50,10 +50,10 @@ TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh"
 # VerbPrefix[SEM=<\x.2nd_3rd(x)>] -> "Da"
 # VerbPrefix[SEM=<\x.1st_3rd(x)>] -> "vI"
 
-VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'"
+VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'" # Interrogative
 
 # Mapping taH suffix means handling Verb tense, we are not doing that
-# VerbSuffix[SEM=<\x.continuous(x)>] -> "taH"
+# VerbSuffix[SEM=<\x.continuous(x)>] -> "taH" ###
 
 # VerbCompound[NUM=sg,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=sg]
 # VerbCompound[NUM=pl,SEM=<\x.1st_3rd(x)>] -> VerbPrefix IV[NUM=pl]
