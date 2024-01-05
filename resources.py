@@ -161,3 +161,19 @@ KLINGON_PHRASES = [
     ["pa'", "Daq", "jIH", "taH"],
     ["tlhIngan", "maH"]
 ]
+
+KLINGON_PHRASES_SEM = [
+    "tlhInganHol Da jatlh 'a'",
+    "puq vIlegh jIH",
+    "pa' Daq jIHtaH",
+    "tlhIngan maH"
+]
+
+'''
+we: λR.R(λy.being(we, y))
+klingon: λQ.Q(klingon)
+λR.R(λy.being(we, y)) (λQ.Q(klingon))
+λQ.Q(klingon)(λy.being(we, y))
+λy.being(we, y)(klingon)
+being(we, klingon)
+'''

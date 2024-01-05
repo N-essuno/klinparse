@@ -3,14 +3,24 @@
 # Grammar Rules
 #############################
 
-S[SEM = <?subj(?vp)>] -> NP[NUM=?n,SEM=?subj] VP[NUM=?n,SEM=?vp]
+#S[SEM = <?vp(?subj)>] -> NP[NUM=?n,SEM=?subj] VP[NUM=?n,SEM=?vp]
+#S[SEM = <?detNoun(?vp)>] -> DetNoun[NUM=?n,SEM=?detNoun] VP[NUM=?n,SEM=?vp]
+S[SEM = <?detNounC(?vp)>] -> DetNounCompound[NUM=?n,SEM=?detNounC] VP[NUM=?n,SEM=?vp]
+
+DetNounCompound[NUM=?n,SEM=<?detNoun(?nounSuffix)>] -> DetNoun[NUM=?n,SEM=?detNoun] NounSuffix[NUM=?n,SEM=?nounSuffix]
 
 NP[NUM=?n,SEM=<?det(?nom)> ] -> Det[NUM=?n,SEM=?det]  Nom[NUM=?n,SEM=?nom]
 NP[LOC=?l,NUM=?n,SEM=?np] -> PropN[LOC=?l,NUM=?n,SEM=?np]
+NP[NUM=?n,SEM=<?detNoun(?nounSuffix)> ] -> DetNoun[NUM=?n,SEM=?detNoun] NounSuffix[NUM=?n,SEM=?nounSuffix]
+
+
 
 Nom[NUM=?n,SEM=?nom] -> N[NUM=?n,SEM=?nom]
 
 VP[NUM=?n,SEM=?v] -> IV[NUM=?n,SEM=?v]
+
+VP[NUM=?n,SEM=?v] -> TB[NUM=?n,SEM=?v]
+
 VP[NUM=?n,SEM=<?v(?obj)>] -> TV[NUM=?n,SEM=?v] NP[SEM=?obj]
 VP[NUM=?n,SEM=<?v(?obj,?pp)>] -> DTV[NUM=?n,SEM=?v] NP[SEM=?obj] PP[+TO,SEM=?pp]
 
@@ -23,25 +33,59 @@ PP[+TO, SEM=?np] -> P[+TO] NP[SEM=?np]
 # These 2 expression capture the meaning that all the entities in the sentence
 #   that are of the same type (children or rooms) refer to the same entity
 #   It is the semantic representation of "the" before a noun
-Noun[NUM=sg,SEM=<\Q.exists x.((child(x) & Q(x)) & all y.(child(y) -> (x = y)))>] -> "puq"
-Noun[NUM=sg,SEM=<\Q.exists x.((room(x) & Q(x)) & all y.(room(y) -> (x = y)))>] -> "pa'"
+DetNoun[NUM=sg,SEM=<\Q.exists c.((child(c) & Q(c)) & all y.(child(y) -> (c = y)))>] -> "puq"
+
+#DetNoun[NUM=sg,SEM=<\Q.exists r.((room(r) & Q(r)) & all y.(room(y) -> (r = y)))>] -> "pa'"
+#DetNoun[NUM=sg,SEM=<\Q\R.exists r.((room(r) & R & Q(r)) & all y.(room(y) -> (r = y)))>] -> "pa'"
+DetNoun[NUM=sg,SEM=<\Q\R.exists r.((room(r) & exists e.(Q(e)(r) & R(e)) & all y.(room(y) -> (r = y))))>] -> "pa'"
+
 
 PropN[NUM=sg,SEM=<\P.P(klingon_language)>] -> "tlhIngan Hol"
 PropN[NUM=sg,SEM=<\P.P(klingon)>] -> "tlhIngan"
+PropN[NUM=sg,SEM=<\P.P(me)>] -> "jIH"
 
-# TODO: check
-NounSuffix[NUM=sg,SEM=<\X x.X(\y.in_proximity_of(x,y)>] -> "Daq"
+#NounSuffix[NUM=sg,SEM=<\x.proximity(e,x)>] -> "Daq"
+NounSuffix[NUM=sg,SEM=<\x\y.proximity(x,y)>] -> "Daq"
 
-# TODO: check
-Pronoun[NUM=sg,SEM=<\P.P(i)>] -> "jIH"
 
-# Ee being(e, I) ^ in_proximity_of(e, room)
+# I am
+#IV[NUM=sg,SEM=<\Q.exists e.being(e,me) & Q>,TNS=pres] -> "jIHtaH"
+#IV[NUM=sg,SEM=<exists e.being(e,me)>,TNS=pres] -> "jIHtaH"
+IV[NUM=sg,SEM=<\x.being(x,me)>,TNS=pres] -> "jIHtaH"
 
-IV[NUM=sg,SEM=<exists e.being(e,I)>,TNS=pres] -> "jIHtaH" # I am
-IV[NUM=pl,SEM=<\x.we_are(x)>,TNS=pres] -> "maH" # we are
 
-TV[NUM=sg,SEM=<\X x.X(\y.see(x,y))>,TNS=pres] -> "legh" # to see
-TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh" # to speak
+
+# to see
+TV[NUM=sg,SEM=<\X x.X(\y.see(y,x))>,TNS=pres] -> "vIlegh"
+# to speak
+TV[NUM=sg,SEM=<\X x.X(\y.speak(y,x))>,TNS=pres] -> "jatlh"
+
+# we are
+TB[NUM=sg,SEM=<\R.R(\y.being(we,y))>,TNS=pres] -> "maH"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # VerbPrefix[SEM=<\X x.X(\y.2nd_3rd(x,y))>,TNS=pres] -> "Da"
 # VerbPrefix[SEM=<\X x.X(\y.1st_3rd(x,y))>,TNS=pres] -> "vI"
@@ -50,7 +94,7 @@ TV[NUM=sg,SEM=<\X x.X(\y.speak(x,y))>,TNS=pres] -> "jatlh" # to speak
 # VerbPrefix[SEM=<\x.2nd_3rd(x)>] -> "Da"
 # VerbPrefix[SEM=<\x.1st_3rd(x)>] -> "vI"
 
-VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'" # Interrogative
+# VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'" # Interrogative
 
 # Mapping taH suffix means handling Verb tense, we are not doing that
 # VerbSuffix[SEM=<\x.continuous(x)>] -> "taH" ###
