@@ -182,6 +182,64 @@ Le conseguenti modifiche apportate rispetto allo pseudocodice sono:
 
 ## Task 1.B: CKY su grammatica L1 di Jurafsky
 
+Il primo task su cui è stato eseguita l'implementazione del parser CKY sono state due frasi in lingua inglese.
+  - _book the flight through Houston_
+  - _does she prefer a morning flight_
+
+La grammatica utilizzata è la grammatica L1 di Jurafsky, ridotta alle componenti necessarie per il parsing delle due frasi.
+<br>
+In particolare questa grammatica rispetta un requisito fondamentale per poter funzionare con questa tipologia di Parser, ossia l'essere in Chomsky Normal Form. Come descritto nella sezione precedente quindi avrà solo regole che generano due non terminali oppure un singolo terminale, e avrà ricorsione solo a sinistra.
+
+Per ogni frase, l'output prodotto dal parser consiste in una tabella.
+<br>
+Il punto della tabella su cui porre attenzione è la posizione in alto a destra (`[0][n-1]` dove `n` è la lunghezza della frase).
+Per ogni frase la tabella in output presenta il simbolo `S` nella posizione indicata.
+Ciò sta a significare che ognuna è quindi sintatticamente corretta rispetto alla grammatica utilizzata.
+
+### Intepretazione della tabella
+
+In questa sezione verrà fatta l'interpretazione di alcune celle della tabella rispetto ad un esempio di applicazione.
+Consideriamo la frase _book the flight through Houston_
+
+Il risultato prodotto è il seguente:
+```
+    ------------- 0 ------------------  -1-     -------- 2 -------      -3-     ------------------ 4 ------------------                              
+0|  ['S', 'VP', 'V', 'Nominal', 'Noun']	[]     	['S', 'VP', 'X2']  	[]   	['S', 'VP', 'X2', 'S', 'S', 'VP', 'VP']
+1|  []                                 	['Det']	['NP']             	[]   	['NP']                                 
+2|  []                                 	[]     	['Nominal', 'Noun']	[]   	['Nominal']                            
+3|  []                                 	[]     	[]                 	['P']	['PP']                                 
+4|  []                                 	[]     	[]                 	[]   	['NP', 'PN'] 
+```
+Considerando la seguenti celle:
+  - `[3][4]` contenente il simbolo `PP`
+  - `[3][3]` contenente il simbolo `P`
+  - `[4][4]` contenente il simbolo `NP`
+
+Il `PP` è il sintagma che "produce" la frase dalla posizione `3` alla `4`, di conseguenza si trova nella posizione `[3][4]`.
+Esso è composto dal sintagma che "produce" la frase nella posizione `3` (`P`), e quindi nella posizione `[3][3]`, e dal sintagma che "produce" la frase nella posizione `4` (`NP`), e quindi nella posizione `[4][4]`. 
+
+Ovviamente la conoscenza del fatto che `PP` è composto da `P` e `NP` è data dalla grammatica utilizzata.
+Ciò significa che nella grammatica sarà presente una regola: `PP -> P NP`.
+Quindi un altra interpretazione che può essere fatta è che nella pozione `[3][3]` è contenuto il primo sintagma generato e nella posizione `[4][4]` è contenuto il secondo.
+Mentre nella posizione `[3][4]` è contenuta la parte sinistra della regola `S -> VP PP` che genera i due sintagmi.
+
+Considerando ora le seguenti celle:
+  - `[2][4]` contenente il simbolo `Nominal`
+  - `[2][2]` contenente il simbolo `Nominal`
+  - `[3][4]` contenente il simbolo `PP`
+
+Il `Nominal` è il sintagma che "produce" la frase dalla posizione `2` alla `4`, di conseguenza si trova nella posizione `[2][4]`.
+Esso è composto dal sintagma che "produce" la frase nella posizione `2` (`Nominal`), e quindi nella posizione `[2][2]`, e dal sintagma che "produce" la frase dalla posizione `3` alla `4` (`PP`), e quindi nella posizione `[3][4]`.
+
+Anche in questo caso la conoscenza del fatto che `Nominal` genera `Nominal` e `PP` è data da una regola presente nella grammatica: `Nominal -> Nominal PP`.
+Quindi in `[2][2]` è contenuto il primo sintagma generato, in `[3][4]` il secondo, e unendoli considerando anche le posizioni della frase generate, in `[2][4]` è contenuto il sintagma (parte sinistra della regola) che li genera.
+
+---
+
+Per questa frase, nella posizione `[0][4]` il simbolo `S` è presente tre volte. Ciò significa che per la grammatica data sono possibili tre alberi sintattici distinti che generano la frase (quindi si hanno tre radici possibili).
+Una possibilità per distinguere i tre alberi è l'applicazione del backtracking per tenere traccia delle diverse catene di produzioni che portano alla generazione della frase.
+
+Il fatto che poi, oltre ad `S`, in posizione `[0][4]` siano presenti anche altri simboli, come ad esempio `VP`, indica che l'intera frase è generata anche da altri sintagmi, e quindi, per esempio, che la frase stessa sia un `VP`.
 
 ---
 
