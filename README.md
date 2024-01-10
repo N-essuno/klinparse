@@ -15,14 +15,16 @@
 - [Task 1.D (extra): Grammatica Klingon con semantica](#task-1d-extra-grammatica-klingon-con-semantica)
 
 ## Descrizione del Progetto
-Questo progetto si concentra sull'implementazione dell'algoritmo di parsing sintattico CKY per la grammatica della lingua Klingon. L'obiettivo principale è analizzare frasi nella lingua Klingon utilizzando un approccio basato su regole grammaticali e generare alberi sintattici per comprendere la struttura delle frasi.
+Questo progetto si concentra sull'implementazione dell'algoritmo di parsing sintattico CKY per la grammatica della lingua Klingon. 
+L'obiettivo principale è analizzare frasi nella lingua Klingon utilizzando un approccio basato su regole grammaticali e generare 
+alberi sintattici per comprendere la struttura delle frasi.
 
 ## Contenuti
 Il progetto è strutturato nel seguente modo:
 
 1. **Implementazione CKY:** Contiene il codice Python che implementa l'algoritmo CKY per il parsing sintattico.
 2. **Grammatica L1 di Jurafsky:** Utilizzata come prima fase di test per l'algoritmo CKY.
-3. **Grammatica Klingon:** Contiene le regole grammaticali per la lingua Klingon, scritte seguendo una notazione formale per il parsing CKY.
+3. **Grammatica Klingon:** Contiene le regole grammaticali per la lingua Klingon, scritte in Chomsky Normal Form così da poterle usare per far girare CKY su frasi in Klingon.
 4. **File di Esempio:** Includerà frasi in Klingon che verranno analizzate utilizzando l'algoritmo CKY.
 
 ## Requisiti e Dipendenze
@@ -31,11 +33,15 @@ Il progetto è strutturato nel seguente modo:
 
 ## Utilizzo
 1. **Setup:** Assicurati di avere Python installato sul tuo sistema.
-2. **Esecuzione:** Esegui il file principale che avvia l'algoritmo CKY passando come input le frasi in Klingon da analizzare.
+2. **Esecuzione:** Esegui il file principale:
   ```
   python main.py frase_klingon.txt
   ```
-  Sostituisci `frase_klingon.txt` con il nome del file contenente la frase in Klingon da analizzare.
+  Che avvia i seguenti test:
+  - Parsing sintattico di una frase in inglese tramite CKY, utilizzando una grammatica giocattolo.
+  - Parsing sintattico di due frasi in inglese tramite CKY, utilizzando la grammatica L1 di Jurafsky.
+  - Parsing sintattico delle 4 frasi Klingon come da requisito di consegna, utilizzando la grammatica Klingon che abbiamo ideato.
+  - Parsing semantico delle stesse frasi Klingon, utilizzando la grammatica con semantica per il Klingon, da noi sviluppata.
 
 ## Componenti del gruppo
 - **Gianluca Barmina** 884084
@@ -164,15 +170,17 @@ Ugualmente avviene, fissato l'estremo destro, con quello sinistro.
 
 #### Risultato dell'algoritmo
 
-Data una frase ed una grammatica, 'algoritmo effettua con successo il parsing della frase se nella cella `[0][n-1]` della matrice è presente il simbolo non terminale `S` che rappresenta la radice dell'albero sintattico.
-La presenza di questo simbolo come anticipato prima indica che la frase è sintatticamente corretta rispetto alla grammatica data e che sia stato trovato un albero sintattico che la rappresenta.
+Data una frase ed una grammatica, l'algoritmo effettua con successo il parsing della frase se nella cella `[0][n-1]` della matrice è presente il 
+simbolo non terminale `S` che rappresenta la radice dell'albero sintattico.
+La presenza di questo simbolo come anticipato prima indica che la frase è sintatticamente corretta rispetto alla grammatica data e che sia stato 
+trovato un albero sintattico che la rappresenta.
 L'albero sintattico può essere ricostruito a partire dalla matrice, partendo dalla cella `[0][n-1]`.
 
 ---
 
-NOTA: Nello pseudocodice visto a lezione e presente nel libro di testo, il primo indice delle righe è `0` mentre il primo indice delle colonne è `1`.
+NOTA: Nello pseudo-codice visto a lezione e presente nel libro di testo, il primo indice delle righe è `0` mentre il primo indice delle colonne è `1`.
 Nella nostra implementazione abbiamo scelto per comodità e naturalezza di utilizzare indici che partono da `0` sia per le righe che per le colonne.
-Le conseguenti modifiche apportate rispetto allo pseudocodice sono:
+Le conseguenti modifiche apportate rispetto allo pseudo-codice sono:
   - Il primo ciclo fa scorrere l'indice `j` da `0` (non da `1`) a `n - 1`, dove `n` è la lunghezza della frase
   - Il secondo ciclo fa scorrere l'indice `i` da `j-1` (non da `j-2`) a `0`
   - Il terzo ciclo fa scorrere l'indice `k` da `i` (non da `i+1`) a `j-1`
@@ -188,7 +196,9 @@ Il primo task su cui è stato eseguita l'implementazione del parser CKY sono sta
 
 La grammatica utilizzata è la grammatica L1 di Jurafsky, ridotta alle componenti necessarie per il parsing delle due frasi.
 <br>
-In particolare questa grammatica rispetta un requisito fondamentale per poter funzionare con questa tipologia di Parser, ossia l'essere in Chomsky Normal Form. Come descritto nella sezione precedente quindi avrà solo regole che generano due non terminali oppure un singolo terminale, e avrà ricorsione solo a sinistra.
+In particolare questa grammatica rispetta un requisito fondamentale per poter funzionare con questa tipologia di Parser, ossia l'essere 
+in Chomsky Normal Form. Come descritto nella sezione precedente quindi avrà solo regole che generano due non terminali oppure un singolo terminale, 
+e avrà ricorsione solo a sinistra.
 
 Per ogni frase, l'output prodotto dal parser consiste in una tabella.
 <br>
@@ -232,7 +242,8 @@ Il `Nominal` è il sintagma che "produce" la frase dalla posizione `2` alla `4`,
 Esso è composto dal sintagma che "produce" la frase nella posizione `2` (`Nominal`), e quindi nella posizione `[2][2]`, e dal sintagma che "produce" la frase dalla posizione `3` alla `4` (`PP`), e quindi nella posizione `[3][4]`.
 
 Anche in questo caso la conoscenza del fatto che `Nominal` genera `Nominal` e `PP` è data da una regola presente nella grammatica: `Nominal -> Nominal PP`.
-Quindi in `[2][2]` è contenuto il primo sintagma generato, in `[3][4]` il secondo, e unendoli considerando anche le posizioni della frase generate, in `[2][4]` è contenuto il sintagma (parte sinistra della regola) che li genera.
+Quindi in `[2][2]` è contenuto il primo sintagma generato, in `[3][4]` il secondo, e unendoli considerando anche le posizioni della 
+frase generate, in `[2][4]` è contenuto il sintagma (parte sinistra della regola) che li genera.
 
 ---
 
