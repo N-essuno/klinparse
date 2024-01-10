@@ -245,6 +245,104 @@ Il fatto che poi, oltre ad `S`, in posizione `[0][4]` siano presenti anche altri
 
 ## Task 1.C: Grammatica Klingon
 
----
+Le regole della grammatica Klingon che abbiamo scritto sono un sottoinsieme di tutte quelle che dovrebbero essere implementate in una grammatica per frasi Klingon arbitrarie.
 
-## Task 1.D (extra): Grammatica Klingon con semantica
+In particolare abbiamo pensato alle regole sufficienti a parsificare le frasi nella consegna del laboratorio.
+Qui indichiamo le scelte più significative.
+
+### Gestione nomi e suffissi
+
+I nomi in Klingon possono avere suffissi che possono avere funzioni diverse. Nel caso nostro l'unico suffisso presente era `Daq` a indicare il fatto che il nome sia un luogo.
+
+Abbiamo quindi rappresentato la particella principale del nome con `Noun` come parte sinistra di ogni regola e i terminali come parte destra.
+I suffissi sono stati rappresentati invece con `NounSuffix` come parte sinistra di ogni regola e i terminali come parte destra.
+
+La regola che poi ci permette di legare i due elementi, componendoli, è `NounCompound -> Noun NounSuffix`.
+
+Il `NounCompund` è poi utilizzato in altre regole, come quelle relative ai verbi o al simbolo di start (`Sentence`) per permettere di strutturare frasi più complesse.
+
+
+### Gestione verbi prefissi e suffissi
+
+I verbi in Klingon possono avere sia suffissi che prefissi.
+- I prefissi indicano la persona e la pluralità di soggetto e complemento oggetto (E.g `Da` prima di un verbo indica che il soggetto è in seconda persona singolare, e che il complemento oggetto è in terza persona singolare)
+- I suffissi indicano dei qualificatori per le azioni del verbo o per la frase intera (E.g. Quando un verbo viene seguito da `'a'` la frase è in forma interrogativa
+
+Quindi abbiamo previsto un sintagma che racchiuda il verbo + eventuali prefissi o suffissi, e lo abbiamo chiamato `VerbCompound`.
+La parte principale del verbo è chiamata `Verb`, i prefissi sono chiamati `VerbPrefix` e i suffissi `VerbSuffix`
+
+La composizione dei verbi con i prefissi e suffissi è data da regole che hanno `VerbCompound` come sintagma a sinistra.
+
+È possibile avere: verbi senza suffisso e senza prefisso, verbi con solo prefisso, verbi con solo suffisso o verbi con entrambi. Per questo sono state realizzate delle regole ad hoc per ogni caso.
+
+
+### Gestione delle radici
+
+La regole relative alle radici possibili hanno parte sinistra `Sentence` e sono state strutturate in modo da rispettare l'ordine delle parole tipico della lingua Klingon: `oggetto-verbo-soggetto`.
+
+Tuttavia, avendo separato la gestione dei verbi e nomi dai relativi prefissi e suffissi, le possibilità di combinazione sono molteplici. Ad esempio si prevede che la frase sia composta da:
+  - `NounCompound` (nome + suffisso) e verbo
+  - `NounCompound` (nome + suffisso) e `VerbCompound` (verbo + prefisso e/o suffisso)
+  - ...
+
+Sono state gestite tutte le possibili combinazioni di nomi, verbi e conseguenti prefissi e suffissi.
+
+
+### Ambiguità tra verbo essere e pronomi personali
+
+In Klingon, fissata una certa numerosità (singolare o plurale) e una certa persona (prima, seconda o terza) i pronomi personali corrispondono al verbo essere coniugato al presente per la stessa persona e numerosità.
+E.g. `mah` indica sia il pronome personale `noi` che la prima persona plurale del verbo essere al presente `noi siamo`
+
+Di conseguenza, per frasi che contengono queste casistiche, gli alberi generati considereranno entrambe le opzioni.
+
+### Risultato dell'esecuzione di CKY
+
+L'esecuzione di CKY sulle frasi fornite ha mostrato che sono tutte sintatticamente corrette. Questo è mostrato dal fatto che nella posizione `[0][n-1]` (dove `n`è la lunghezza della frase) della matrice è presente il simbolo `Sentence` che rappresenta la radice dell'albero sintattico.
+
+I risultati ci mostrano anche che, nonostante l'ambiguità tra verbo essere e pronomi personali, non ci sia ambiguità sintattica nel parsing intero di nessuna frase. Questo è mostrato dal fatto che nella posizione `[0][n-1]` della matrice è presente il simbolo `Sentence` solo una volta, ossia è stato generato un singolo albero sintattico.
+
+
+## 1.D (extra): Grammatica Klingon con semantica
+
+Qui indichiamo le scelte più significative in merito alla grammatica semantica scritta per la lingua Klingon.
+
+### Processo di derivazione della semantica
+
+Il processo di derivazione della semantica che abbiamo seguito si basa sul reverse engineering.
+
+In particolare abbiamo analizzato una frase per volta e abbiamo identificato una formula di logica del prim'ordine che potesse rappresentare la semantica della frase intera.
+
+Una volta effettuato ciò, abbiamo individuato all'interno della formula, le singole sotto-formule che rappresentassero la semantica dei vari sintagmi per poi estrarle e assegnarle ad ogni sintagma.
+
+Abbiamo poi applicato manualmente le operazioni di Beta reduction utilizzando le parti estratte e individuato quali delle parti fossero le funzioni e quali gli argomenti.
+
+Una volta certi della correttezza logica abbiamo riportato le regole di λ-FoL per ogni sintagma.
+
+Dato che ci siamo fortemente basati sulle frasi fornite, la grammatica con semantica che abbiamo scritto è molto specifica, è quindi sicuramente corretta per le frasi fornite ma non è detto che lo sia per frasi più complesse.
+
+### Reificazione degli eventi
+
+Per gestire il legame tra verbo e prefissi o suffissi abbiamo usato il meccanismo di reificazione degli eventi visto a lezione.
+Il verbo viene tradotto in una variabile che rappresenta l'azione del verbo (chiamata evento), a cui si legano una serie di componenti (prefissi, suffissi, frase interrogativa, etc..), tra cui il verbo stesso.
+A questo punto è possibile legare un numero di entità arbitrario all'evento (tra cui prefissi e suffissi). 
+
+E.g. semantica di "Dajatlh"
+```
+IV[SEM=<λQ λX.∃ e.(X(λx.speak(e,you,x)) ^ Q(e))>] -> "Dajatlh"
+```
+In questo caso il parlare è trattato come un evento (`e`) a cui verrà poi associata l'informazione sulla forma interrogativa della frase.
+
+Lo stesso ragionamento è stato fatto per alcuni sostantivi con prefisso, oppure per la frase interrogativa.
+
+
+
+
+### Determiners
+
+In alcune frasi fornite dalla consegna appaiono nomi comuni. Queste frasi, tradotte in inglese o in italiano, portano il nome accompagnato dall'articolo determinativo (E.g. pa' -> la stanza).
+Abbiamo quindi tradotto i terminali di questo tipo di modo da rappresentare il significato di un nome preceduto da un articolo determinativo. Ovvero, se in una frase parlo del bambino (e non di un bambino qualsiasi) e successivamente mi riferisco nuovamente al bambino, a livello semantico mi riferisco alla stessa entità.
+
+E.g semantica di "The Child"
+```
+DetNoun[SEM=<λQ. ∃c.((child(c) & Q(c)) ^ ∀ y.(child(y) -> (c = y)))>] -> "puq"
+```
