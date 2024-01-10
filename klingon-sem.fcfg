@@ -16,9 +16,9 @@ NP[SEM=<?det(?nom)> ] -> Det[SEM=?det]  Nom[SEM=?nom]
 NP[SEM=?np] -> PropN[SEM=?np]
 
 
-Nom[NUM=?n,SEM=?nom] -> N[NUM=?n,SEM=?nom]
+Nom[SEM=?nom] -> N[SEM=?nom]
 
-VP[NUM=?n,SEM=?v] -> IV[NUM=?n,SEM=?v]
+VP[SEM=?v] -> IV[SEM=?v]
 
 VP[SEM=?v] -> TB[SEM=?v]
 

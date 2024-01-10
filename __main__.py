@@ -71,8 +71,8 @@ if __name__ == "__main__":
         print("Invalid or missing argument for printing matrix: (should be 1=True or 0=False) defaulting to False\n")
         print_matrix = False
 
-    # test_dummy(print_matrix)
-    # test_jurafsky(print_matrix)
-    # test_klingon(print_matrix)
-    # test_simple_sem()
+    test_dummy(print_matrix)
+    test_jurafsky(print_matrix)
+    test_klingon(print_matrix)
+    test_simple_sem()
     test_klingon_sem()
