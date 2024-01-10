@@ -124,6 +124,7 @@ KLINGON_GRAMMAR = [
 
     # Verb Phrases
     # TODO: check if this is correct
+    # Forse omessa questa parte perchè considerata in modo più semplice dall'ultima regola per la Sentence complessa?
     # ("NounVerb", ["NounCompound", "Verb"]),
     # ("NounVerb", ["NounCompound", "VerbCompound"]),
     # ("NounVerb", ["Noun", "Verb"]),
@@ -163,7 +164,7 @@ KLINGON_PHRASES = [
 ]
 
 KLINGON_PHRASES_SEM = [
-    "tlhInganHol Da jatlh 'a'",
+    "tlhInganHol Dajatlh 'a'",
     "puq vIlegh jIH",
     "pa' Daq jIHtaH",
     "tlhIngan maH"

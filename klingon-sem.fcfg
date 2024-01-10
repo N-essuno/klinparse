@@ -3,28 +3,26 @@
 # Grammar Rules
 #############################
 
-#S[SEM = <?vp(?subj)>] -> NP[NUM=?n,SEM=?subj] VP[NUM=?n,SEM=?vp]
-#S[SEM = <?detNoun(?vp)>] -> DetNoun[NUM=?n,SEM=?detNoun] VP[NUM=?n,SEM=?vp]
-S[SEM = <?detNounC(?vp)>] -> DetNounCompound[NUM=?n,SEM=?detNounC] VP[NUM=?n,SEM=?vp]
+S[SEM = <?vp(?subj)>] -> NP[SEM=?subj] VP[SEM=?vp]
+S[SEM = <?detNoun(?vp)>] -> DetNoun[SEM=?detNoun] VP[SEM=?vp]
+S[SEM = <?detNounC(?vp)>] -> DetNounCompound[SEM=?detNounC] VP[SEM=?vp]
+S[SEM = <?vc(?subj)>] -> NP[SEM=?subj] VerbCompound[SEM=?vc]
 
-DetNounCompound[NUM=?n,SEM=<?detNoun(?nounSuffix)>] -> DetNoun[NUM=?n,SEM=?detNoun] NounSuffix[NUM=?n,SEM=?nounSuffix]
+DetNounCompound[SEM=<?detNoun(?nounSuffix)>] -> DetNoun[SEM=?detNoun] NounSuffix[SEM=?nounSuffix]
 
-NP[NUM=?n,SEM=<?det(?nom)> ] -> Det[NUM=?n,SEM=?det]  Nom[NUM=?n,SEM=?nom]
-NP[LOC=?l,NUM=?n,SEM=?np] -> PropN[LOC=?l,NUM=?n,SEM=?np]
-NP[NUM=?n,SEM=<?detNoun(?nounSuffix)> ] -> DetNoun[NUM=?n,SEM=?detNoun] NounSuffix[NUM=?n,SEM=?nounSuffix]
+VerbCompound[SEM=<?v(?verbSuffix)>] -> IV[SEM=?v] VerbSuffix[SEM=?verbSuffix]
 
+NP[SEM=<?det(?nom)> ] -> Det[SEM=?det]  Nom[SEM=?nom]
+NP[SEM=?np] -> PropN[SEM=?np]
 
 
 Nom[NUM=?n,SEM=?nom] -> N[NUM=?n,SEM=?nom]
 
 VP[NUM=?n,SEM=?v] -> IV[NUM=?n,SEM=?v]
 
-VP[NUM=?n,SEM=?v] -> TB[NUM=?n,SEM=?v]
+VP[SEM=?v] -> TB[SEM=?v]
 
-VP[NUM=?n,SEM=<?v(?obj)>] -> TV[NUM=?n,SEM=?v] NP[SEM=?obj]
-VP[NUM=?n,SEM=<?v(?obj,?pp)>] -> DTV[NUM=?n,SEM=?v] NP[SEM=?obj] PP[+TO,SEM=?pp]
-
-PP[+TO, SEM=?np] -> P[+TO] NP[SEM=?np]
+VP[SEM=<?v(?obj)>] -> TV[SEM=?v] NP[SEM=?obj]
 
 #############################
 # Lexical Rules
@@ -33,35 +31,31 @@ PP[+TO, SEM=?np] -> P[+TO] NP[SEM=?np]
 # These 2 expression capture the meaning that all the entities in the sentence
 #   that are of the same type (children or rooms) refer to the same entity
 #   It is the semantic representation of "the" before a noun
-DetNoun[NUM=sg,SEM=<\Q.exists c.((child(c) & Q(c)) & all y.(child(y) -> (c = y)))>] -> "puq"
+DetNoun[SEM=<\Q.exists c.((child(c) & Q(c)) & all y.(child(y) -> (c = y)))>] -> "puq"
 
-#DetNoun[NUM=sg,SEM=<\Q.exists r.((room(r) & Q(r)) & all y.(room(y) -> (r = y)))>] -> "pa'"
-#DetNoun[NUM=sg,SEM=<\Q\R.exists r.((room(r) & R & Q(r)) & all y.(room(y) -> (r = y)))>] -> "pa'"
-DetNoun[NUM=sg,SEM=<\Q\R.exists r.((room(r) & exists e.(Q(e)(r) & R(e)) & all y.(room(y) -> (r = y))))>] -> "pa'"
+DetNoun[SEM=<\Q\R.exists r.((room(r) & exists e.(Q(e)(r) & R(e)) & all y.(room(y) -> (r = y))))>] -> "pa'"
 
+PropN[SEM=<\P.P(klingon_language)>] -> "tlhInganHol"
+PropN[SEM=<\P.P(klingon)>] -> "tlhIngan"
+PropN[SEM=<\P.P(me)>] -> "jIH"
 
-PropN[NUM=sg,SEM=<\P.P(klingon_language)>] -> "tlhIngan Hol"
-PropN[NUM=sg,SEM=<\P.P(klingon)>] -> "tlhIngan"
-PropN[NUM=sg,SEM=<\P.P(me)>] -> "jIH"
-
-#NounSuffix[NUM=sg,SEM=<\x.proximity(e,x)>] -> "Daq"
-NounSuffix[NUM=sg,SEM=<\x\y.proximity(x,y)>] -> "Daq"
+NounSuffix[SEM=<\x\y.proximity(x,y)>] -> "Daq"
 
 
 # I am
-#IV[NUM=sg,SEM=<\Q.exists e.being(e,me) & Q>,TNS=pres] -> "jIHtaH"
-#IV[NUM=sg,SEM=<exists e.being(e,me)>,TNS=pres] -> "jIHtaH"
-IV[NUM=sg,SEM=<\x.being(x,me)>,TNS=pres] -> "jIHtaH"
-
+IV[SEM=<\x.being(x,me)>] -> "jIHtaH"
+# to speak
+IV[SEM=<\Q\X.exists e.(X(\x.speak(you,x)) & Q(e))>] -> "Dajatlh"
 
 
 # to see
-TV[NUM=sg,SEM=<\X x.X(\y.see(y,x))>,TNS=pres] -> "vIlegh"
-# to speak
-TV[NUM=sg,SEM=<\X x.X(\y.speak(y,x))>,TNS=pres] -> "jatlh"
+TV[SEM=<\X x.X(\y.see(y,x))>] -> "vIlegh"
 
 # we are
-TB[NUM=sg,SEM=<\R.R(\y.being(we,y))>,TNS=pres] -> "maH"
+TB[SEM=<\R.R(\y.being(we,y))>] -> "maH"
+
+# interrogative verb suffix
+VerbSuffix[SEM=<\x.interrogative(x)>] -> "'a'"
 
 
 

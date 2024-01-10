@@ -51,10 +51,10 @@ def test_simple_sem():
     parse_with_semantics('file:simple-sem.fcfg', sentence)
 
 def test_klingon_sem():
-    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[0])
-    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[1])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[0])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[1])
     parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[2])
-    # parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[3])
+    parse_with_semantics('file:klingon-sem.fcfg', KLINGON_PHRASES_SEM[3])
 
 def parse_with_semantics(grammar_url, sentence):
     parser = load_parser(grammar_url, trace=0)
