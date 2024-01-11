@@ -1,4 +1,4 @@
-# Grammatica Klingon con Parsing CKY
+# Grammatica Klingon con Parsing CKY e Semantica
 
 ### Indice
 
@@ -7,28 +7,33 @@
 - [Indice](#indice)
 - [Contenuti](#contenuti)
 - [Utilizzo](#utilizzo)
-- [Note Aggiuntive](#note-aggiuntive)
+- [Note aggiuntive](#note-aggiuntive)
 - [Task 1.A: Parser CKY](#task-1a-parser-cky)
 - [Task 1.B: CKY su grammatica L1 di Jurafsky](#task-1b-cky-su-grammatica-l1-di-jurafsky)
 - [Task 1.C: Grammatica Klingon](#task-1c-grammatica-klingon)
-- [Task 1.D (extra): Grammatica Klingon con semantica](#task-1d-extra-grammatica-klingon-con-semantica)
+- [Task 1.D: Grammatica Klingon con semantica](#task-1d-extra-grammatica-klingon-con-semantica)
 
 ## Componenti del gruppo
 - **Gianluca Barmina** 884084
 - **Marco Amato** 882348
 
 ## Descrizione del Progetto
-Questo progetto si concentra sull'implementazione dell'algoritmo di parsing sintattico CKY per la grammatica della lingua Klingon. 
-L'obiettivo principale è analizzare frasi nella lingua Klingon utilizzando un approccio basato su regole grammaticali e generare 
-alberi sintattici per comprendere la struttura delle frasi.
+Questo progetto è composto di 4 parti:
+  - Implementazione dell'algoritmo di parsing sintattico CKY.
+  - Testare l'algoritmo CKY su una grammatica a costituenti per la lingua inglese (L1 di Jurafsky)
+  - Implementazione di una grammatica a costituenti per la lingua Klingon e parsificazione di alcune frasi sfruttando CKY.
+  - Implementazione di una grammatica con semantica per la lingua Klingon e calcolo della semantica di alcune frasi sfruttando un parser semantico di NLTK.
 
 ## Contenuti
 Il progetto è strutturato nel seguente modo:
 
-1. **Implementazione CKY:** Contiene il codice Python che implementa l'algoritmo CKY per il parsing sintattico.
-2. **Grammatica L1 di Jurafsky:** Utilizzata come prima fase di test per l'algoritmo CKY.
-3. **Grammatica Klingon:** Contiene le regole grammaticali per la lingua Klingon, scritte in Chomsky Normal Form così da poterle usare per far girare CKY su frasi in Klingon.
-4. **File di Esempio:** Includerà frasi in Klingon che verranno analizzate utilizzando l'algoritmo CKY.
+1. **CKYParser.py:** Contiene il codice Python che implementa l'algoritmo CKY per il parsing sintattico.
+2. **resources.py:** Contiene il codice Python che implementa le strutture utilizzate per:
+   - Grammatica L1 di Jurafsky
+   - Grammatica per la lingua Klingon, scritte in Chomsky Normal Form.
+   - Grammatica per la lingua Klingon con semantica
+   - Frasi in inglese e Klingon utilizzate per i test
+3. **main.py:** Contiene il codice Python che esegue i vari test.
 
 ## Utilizzo
 ```
@@ -42,7 +47,7 @@ Che avvia i seguenti test:
 Il parametro opzionale `0` o `1` permette di scegliere se stampare ogni step dell'esecuzione di CKY o meno.
   
 
-## Note Aggiuntive
+## Note aggiuntive
 - La grammatica Klingon può non essere completa e potrebbe richiedere ulteriori regole per coprire una vasta gamma di frasi.
 
 ---
@@ -61,7 +66,7 @@ La frase è stata modellata come una lista di stringhe, in cui ogni parola è un
 ### Modellazione della grammatica
 
 La grammatica è stata modellata come una lista di tuple. Ogni tupla è composta da:
-  - Una stringa rappresentante la parte sinistra della regola. Questa stringa rappresenta un simbolo non terminale
+  - Una stringa rappresentante la parte sinistra della regola. Questa stringa rappresenta un simbolo non terminale.
   - Una lista di stringhe rappresentante la parte destra della regola. Ognuna delle stringhe rappresenta un simbolo terminale o non terminale.
 
 La grammatica fornita è in formato CNF, quindi:
@@ -82,7 +87,7 @@ Ogni colonna della matrice corrisponde ad una parola della frase.
 
 L'idea fondamentale dell'algoritmo è che data una regola `A -> BC`, possiamo considerare la produzione di destra delimitata da due estremi: `i` e `j`.
 A questo punto, possiamo dividere la produzione in due parti, costituite dai due sintagmi: `B` e `C`.
-Considerando ciò, esiste una posizione `k` tale che `i < k < j` che divide la produzione in due parti:
+Considerando ciò, esiste una posizione `k`, tale che `i < k < j`, che divide la produzione in due parti:
   - da `i` a `k` ci sarà `B`
   - da `k` a `j` ci sarà `C`
 
@@ -94,8 +99,10 @@ Sfruttando questa divisione la tabella verrà costruita in modo da avere:
 Questo per rappresentare che il sintagma `A` (lungo da `i` a `j`) produce `B` (lungo da `i` a `k`) e `C` (lungo da `k` a `j`)
 
 Mantenendo questa idea si può intuire che le parti sinistre delle regole che producono i terminali (ossia le parole della frase) verranno inserite nella diagonale principale della matrice.
-Considerando una regola `A -> b` stiamo dicendo che il sintagma `A` (lungo da `i` a `j`) produce il terminale `b` (lungo da `i` a `j`).
-Tuttavia in questo caso sarà prodotta esattamente una parola, che avrà quindi lunghezza 1, ossia `i = j`, e sicuramente non potrà essere ulteriormente divisa.
+<br>
+Considerando una regola `A -> b` stiamo infatti dicendo che il sintagma `A` (lungo da `i` a `j`) produce il terminale `b` (lungo da `i` a `j`).
+Tuttavia in questo caso sarà prodotta esattamente una parola, che avrà quindi lunghezza unitaria, ossia `i = j`, e sicuramente non potrà essere ulteriormente divisa.
+<br>
 Dato che ogni posizione della diagonale avrà `i = j`, ogni posizione `[i][j]` conterrà il simbolo non terminale che produce la parola in posizione `j` della frase.
 
 
@@ -114,7 +121,8 @@ Se questa esiste allora viene inserito il simbolo non terminale `A` nella posizi
 Ossia nell'elemento della diagonale principale che corrisponde alla colonna (parola) `j-esima`.
 
 Essendo i successivi cicli annidati, il riempimento non viene fatto in un colpo solo.
-Nel momento in cui ci sono posizioni valide per l'avvio dei cicli successivi, il riempimento della diagonale si ferma si passa al riempimento delle altre posizioni della matrice.
+<br>
+Nel momento in cui ci sono posizioni valide per l'avvio dei cicli successivi, il riempimento della diagonale si ferma e si passa al riempimento delle altre posizioni della matrice.
 Il riempimento della diagonale proseguirà poi quando i cicli successivi verranno terminati.
 
 <br>
@@ -122,6 +130,7 @@ Il riempimento della diagonale proseguirà poi quando i cicli successivi verrann
 #### Secondo ciclo: i
 
 Il ciclo interno successivo, una volta fissata la colonna `j`, scorre le righe della matrice, partendo dalla diagonale principale e arrivando alla riga `0`.
+<br>
 Il compito del ciclo è di permettere il riempimento delle colonne della matrice.
 Ogni colonna viene riempita in modo decrescente partendo dalla fondo (diagonale principale) e arrivando alla riga `0`.
 
@@ -133,17 +142,17 @@ Fissati entrambi, il ciclo successivo potrà scorrere le posizioni intermedie de
 <br>
 
 #### Terzo ciclo: k
-Una volta fissati gli estremi `i` e `j`, il ciclo più interno scorre le posizioni intermedie fra essi per trovare tutte le possibili posizioni `k` in cui dividere la frase.
-Ossia individuare i sintagmi della frase (separati in posizione `k`) tali per cui esiste una regola che li genera.
+Una volta fissati gli estremi `i` e `j`, il ciclo più interno scorre le posizioni intermedie fra essi per trovare tutte le possibili posizioni `k` in cui dividere la frase. Ossia individuare i sintagmi della frase (separati in posizione `k`) tali per cui esiste una regola che li genera.
 
 A questo punto stiamo considerando sicuramente sintagmi composti non da singole parole.
 Questo perché se fossero singole parole, allora sarebbero già state inserite nella diagonale principale.
 Di conseguenza andiamo a considerare solo le regole della forma `A -> BC`, dove `B` e `C` sono simboli non terminali.
+
 Dati gli estremi `i` e `j`, l'obiettivo è individuare tutti valori di `k` tali per cui `i < k < j` ed esista una regola `A -> BC` tale che `B` è nella posizione `[i][k]` e `C` è nella posizione `[k][j]`.
 Più in particolare ciò che ci interessa è il non terminale `A`, che verrà inserito nella posizione `[i][j]` della matrice.
 
 Addentrandoci nel codice, in questo ciclo, avendo fissato gli estremi `i` e `j`, e una certa posizione intermedia `k`, si considera ogni regola della grammatica della forma `A -> BC`.
-Per ogni regola in particolare chiamiamo `left` la parte sinistra e `right` la parte destra.
+Per ogni **parte destra della regola** in particolare chiamiamo `left` la parte sinistra di essa (primo sintagma generato) e `right` la parte destra (secondo sintagma generato).
 Verifichiamo se `left` è presente nella posizione `[i][k]` e se `right` è presente nella posizione `[k][j]`.
 Se entrambe le condizioni sono verificate, ciò significa che:
   - Abbiamo trovato una regola che genera la frase definita dagli estremi `i` e `j`
@@ -153,9 +162,11 @@ Se entrambe le condizioni sono verificate, ciò significa che:
 
 Considerando ciò, per rappresentare che questa regola produce la frase, inseriamo il simbolo non terminale `A` nella posizione `[i][j]` della matrice.
 
-Ogni volta che per una certa posizione intermedia `k` vengono analizzate tutte le regole ed eventualmente aggiunte alla matrice, il ciclo termina e si passa alla posizione intermedia successiva.
+Ogni volta che per una certa posizione intermedia `k` vengono analizzate tutte le regole, ed eventualmente vengono aggiunte alla matrice, il ciclo termina e si passa alla posizione intermedia successiva.
+<br>
 Ogni volta che per un certo estremo sinistro `i` vengono considerate tutte le posizioni intermedie, il ciclo termina e si passa all'estremo sinistro successivo, scorrendo verso `j`.
   - Ciò si traduce nello scorrimento e riempimento della colonna `j-esima` verso l'alto, ossia verso `0`
+
 Ogni volta che per un certo estremo destro `j` vengono considerate tutte le possibilità di estremi sinistri e posizioni intermedie, il ciclo termina e si passa all'estremo destro successivo, scorrendo verso `n-1`.
   - Ciò si traduce nello scorrimento da sinistra a destra delle colonne. Ogni colonna sarà poi considerata dal ciclo successivo.
 
@@ -166,13 +177,15 @@ Ugualmente avviene, fissato l'estremo destro, con quello sinistro.
 
 Data una frase ed una grammatica, l'algoritmo effettua con successo il parsing della frase se nella cella `[0][n-1]` della matrice è presente il 
 simbolo non terminale `S` che rappresenta la radice dell'albero sintattico.
+<br>
 La presenza di questo simbolo come anticipato prima indica che la frase è sintatticamente corretta rispetto alla grammatica data e che sia stato 
 trovato un albero sintattico che la rappresenta.
 L'albero sintattico può essere ricostruito a partire dalla matrice, partendo dalla cella `[0][n-1]`.
 
 ---
 
-NOTA: Nello pseudo-codice visto a lezione e presente nel libro di testo, il primo indice delle righe è `0` mentre il primo indice delle colonne è `1`.
+**NOTA:** Nello pseudo-codice visto a lezione e presente nel libro di testo, il primo indice delle righe è `0` mentre il primo indice delle colonne è `1`.
+<br>
 Nella nostra implementazione abbiamo scelto per comodità e naturalezza di utilizzare indici che partono da `0` sia per le righe che per le colonne.
 Le conseguenti modifiche apportate rispetto allo pseudo-codice sono:
   - Il primo ciclo fa scorrere l'indice `j` da `0` (non da `1`) a `n - 1`, dove `n` è la lunghezza della frase
@@ -220,9 +233,10 @@ Considerando la seguenti celle:
   - `[4][4]` contenente il simbolo `NP`
 
 Il `PP` è il sintagma che "produce" la frase dalla posizione `3` alla `4`, di conseguenza si trova nella posizione `[3][4]`.
-Esso è composto dal sintagma che "produce" la frase nella posizione `3` (`P`), e quindi nella posizione `[3][3]`, e dal sintagma che "produce" la frase nella posizione `4` (`NP`), e quindi nella posizione `[4][4]`. 
+Esso è composto dal sintagma che "produce" la frase nella posizione `3` della frase (`P`), e quindi nella posizione `[3][3]` della tabella, e dal sintagma che "produce" la frase nella posizione `4` della frase (`NP`), e quindi nella posizione `[4][4]` della tabella. 
 
 Ovviamente la conoscenza del fatto che `PP` è composto da `P` e `NP` è data dalla grammatica utilizzata.
+<br>
 Ciò significa che nella grammatica sarà presente una regola: `PP -> P NP`.
 Quindi un altra interpretazione che può essere fatta è che nella pozione `[3][3]` è contenuto il primo sintagma generato e nella posizione `[4][4]` è contenuto il secondo.
 Mentre nella posizione `[3][4]` è contenuta la parte sinistra della regola `S -> VP PP` che genera i due sintagmi.
@@ -252,15 +266,15 @@ Il fatto che poi, oltre ad `S`, in posizione `[0][4]` siano presenti anche altri
 
 Le regole della grammatica Klingon che abbiamo scritto sono un sottoinsieme di tutte quelle che dovrebbero essere implementate in una grammatica per frasi Klingon arbitrarie.
 
-In particolare abbiamo pensato alle regole sufficienti a parsificare le frasi nella consegna del laboratorio.
+In particolare ci siamo attenuti alle regole sufficienti a parsificare le frasi nella consegna del laboratorio.
 Qui indichiamo le scelte più significative.
 
 ### Gestione nomi e suffissi
 
-I nomi in Klingon possono avere suffissi che possono avere funzioni diverse. Nel caso nostro l'unico suffisso presente era `Daq` a indicare il fatto che il nome sia un luogo.
+I nomi in Klingon possono avere suffissi che possono avere funzioni diverse. Nel caso nostro l'unico suffisso presente era `Daq` a indicare il fatto che il nome sia un luogo e una certa azione si svolga in prossimità di quel luogo.
 
-Abbiamo quindi rappresentato la particella principale del nome con `Noun` come parte sinistra di ogni regola e i terminali come parte destra.
-I suffissi sono stati rappresentati invece con `NounSuffix` come parte sinistra di ogni regola e i terminali come parte destra.
+Abbiamo quindi rappresentato la particella principale del nome con `Noun` come parte sinistra di ogni regola e i relativi terminali come parte destra.
+I suffissi sono stati rappresentati invece con `NounSuffix` come parte sinistra di ogni regola e i relativi terminali come parte destra.
 
 La regola che poi ci permette di legare i due elementi, componendoli, è `NounCompound -> Noun NounSuffix`.
 
@@ -297,7 +311,7 @@ Sono state gestite tutte le possibili combinazioni di nomi, verbi e conseguenti 
 ### Ambiguità tra verbo essere e pronomi personali
 
 In Klingon, fissata una certa numerosità (singolare o plurale) e una certa persona (prima, seconda o terza) i pronomi personali corrispondono al verbo essere coniugato al presente per la stessa persona e numerosità.
-E.g. `mah` indica sia il pronome personale `noi` che la prima persona plurale del verbo essere al presente `noi siamo`
+E.g. `mah` indica sia il pronome personale `noi` che la prima persona plurale del verbo essere al presente `noi siamo`.
 
 Di conseguenza, per frasi che contengono queste casistiche, gli alberi generati considereranno entrambe le opzioni.
 
@@ -308,7 +322,7 @@ L'esecuzione di CKY sulle frasi fornite ha mostrato che sono tutte sintatticamen
 I risultati ci mostrano anche che, nonostante l'ambiguità tra verbo essere e pronomi personali, non ci sia ambiguità sintattica nel parsing intero di nessuna frase. Questo è mostrato dal fatto che nella posizione `[0][n-1]` della matrice è presente il simbolo `Sentence` solo una volta, ossia è stato generato un singolo albero sintattico.
 
 
-## 1.D (extra): Grammatica Klingon con semantica
+## Task 1.D (extra): Grammatica Klingon con semantica
 
 Qui indichiamo le scelte più significative in merito alla grammatica semantica scritta per la lingua Klingon.
 
@@ -318,19 +332,22 @@ Il processo di derivazione della semantica che abbiamo seguito si basa sul rever
 
 In particolare abbiamo analizzato una frase per volta e abbiamo identificato una formula di logica del prim'ordine che potesse rappresentare la semantica della frase intera.
 
-Una volta effettuato ciò, abbiamo individuato all'interno della formula, le singole sotto-formule che rappresentassero la semantica dei vari sintagmi per poi estrarle e assegnarle ad ogni sintagma.
+Una volta effettuato ciò, abbiamo individuato all'interno della formula, le singole sotto-formule che rappresentassero la semantica dei vari sintagmi per poi estrarle e assegnarle ad ogni sintagma. All'occorrenza, sono stati inseriti operatori lambda per fare il bind di variabili ancora non legate nelle sotto-formule ma che sarebbero state legate in seguito tramite Beta reduction.
 
 Abbiamo poi applicato manualmente le operazioni di Beta reduction utilizzando le parti estratte e individuato quali delle parti fossero le funzioni e quali gli argomenti.
 
-Una volta certi della correttezza logica abbiamo riportato le regole di λ-FoL per ogni sintagma.
+Una volta certi della correttezza logica della formula prodotta tramite Beta reduction, abbiamo riportato le regole di λ-FoL per ogni sintagma all'interno del codice.
 
-Dato che ci siamo fortemente basati sulle frasi fornite, la grammatica con semantica che abbiamo scritto è molto specifica, è quindi sicuramente corretta per le frasi fornite ma non è detto che lo sia per frasi più complesse.
+Dato che ci siamo fortemente basati sulle frasi fornite, la grammatica con semantica che abbiamo scritto è molto specifica, è quindi corretta per le frasi fornite ma non è detto che lo sia per frasi più complesse.
 
 ### Determiners
 
 In alcune frasi fornite dalla consegna appaiono nomi comuni. Queste frasi, tradotte in inglese o in italiano, portano il nome accompagnato dall'articolo determinativo (E.g. pa' -> la stanza).
-<br>
+
 Abbiamo quindi tradotto i terminali di questo tipo in modo da rappresentare il significato di un nome preceduto da un articolo determinativo. Ovvero, se in una frase parlo del bambino (e non di un bambino qualsiasi) e successivamente mi riferisco nuovamente al bambino, a livello semantico mi riferisco alla stessa entità.
+
+Abbiamo chiamato questo sintagma particolare composti da articolo e nome `DetNoun`.
+
 
 E.g semantica di "The Child"
 ```
@@ -341,10 +358,10 @@ DetNoun[SEM=<λQ. ∃c.((child(c) ^ Q(c)) ^ ∀y.(child(y) -> (c = y)))>] -> "pu
 
 In Klingon, suffissi di verbi e nomi possono essere utilizzati per esprimere informazioni aggiuntive che poi si rispecchiano nella semantica della frase.
 Per gestire il legame tra verbo/nome e suffissi abbiamo usato il meccanismo di reificazione degli eventi, in particolare la versione di Davidson, che non prevede una separazione fra _Agent_ e _Patient_ dell'azione.
-<br>
+
 Abbiamo quindi creato una variabile `e` che rappresenta un evento, essa poi si riferisce sia al verbo, sia al predicato rappresentante l'informazione aggiuntiva data dal suffisso.
 I casi in cui abbiamo utilizzato la reificazione sono:
-  - Suffisso (di verbo) `'a'`: per esprimere la forma interrogativa. In questo caso la semantica relativa alla creazione dell'evento è stata posta nella parte principale del verbo (`Dajatlh`)
+  - Suffisso (di verbo) `'a'`: per esprimere la forma interrogativa. In questo caso la semantica relativa alla creazione dell'evento è stata posta nella parte principale del verbo (`Dajatlh`, ossia _"to speak"_)
   ```
   IV[SEM=<λQ λX.∃e.(X(λx.speak(e,you,x)) ^ Q(e))>] -> "Dajatlh"
   ```
