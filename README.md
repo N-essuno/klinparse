@@ -2,17 +2,20 @@
 
 ### Indice
 
+- [Componenti del gruppo](#componenti-del-gruppo)
 - [Descrizione del Progetto](#descrizione-del-progetto)
 - [Indice](#indice)
 - [Contenuti](#contenuti)
-- [Requisiti e Dipendenze](#requisiti-e-dipendenze)
 - [Utilizzo](#utilizzo)
-- [Componenti del gruppo](#componenti-del-gruppo)
 - [Note Aggiuntive](#note-aggiuntive)
 - [Task 1.A: Parser CKY](#task-1a-parser-cky)
 - [Task 1.B: CKY su grammatica L1 di Jurafsky](#task-1b-cky-su-grammatica-l1-di-jurafsky)
 - [Task 1.C: Grammatica Klingon](#task-1c-grammatica-klingon)
 - [Task 1.D (extra): Grammatica Klingon con semantica](#task-1d-extra-grammatica-klingon-con-semantica)
+
+## Componenti del gruppo
+- **Gianluca Barmina** 884084
+- **Marco Amato** 882348
 
 ## Descrizione del Progetto
 Questo progetto si concentra sull'implementazione dell'algoritmo di parsing sintattico CKY per la grammatica della lingua Klingon. 
@@ -27,29 +30,20 @@ Il progetto è strutturato nel seguente modo:
 3. **Grammatica Klingon:** Contiene le regole grammaticali per la lingua Klingon, scritte in Chomsky Normal Form così da poterle usare per far girare CKY su frasi in Klingon.
 4. **File di Esempio:** Includerà frasi in Klingon che verranno analizzate utilizzando l'algoritmo CKY.
 
-## Requisiti e Dipendenze
-- Python (versione X.X)
-- Altre dipendenze o librerie (se presenti)
-
 ## Utilizzo
-1. **Setup:** Assicurati di avere Python installato sul tuo sistema.
-2. **Esecuzione:** Esegui il file principale:
-  ```
-  python main.py frase_klingon.txt
-  ```
-  Che avvia i seguenti test:
-  - Parsing sintattico di una frase in inglese tramite CKY, utilizzando una grammatica giocattolo.
+```
+python main.py [0-1]
+```
+Che avvia i seguenti test:
   - Parsing sintattico di due frasi in inglese tramite CKY, utilizzando la grammatica L1 di Jurafsky.
-  - Parsing sintattico delle 4 frasi Klingon come da requisito di consegna, utilizzando la grammatica Klingon che abbiamo ideato.
+  - Parsing sintattico delle 4 frasi Klingon come da requisito di consegna, utilizzando la grammatica Klingon che abbiamo ideato e l'implementazione di CKY.
   - Parsing semantico delle stesse frasi Klingon, utilizzando la grammatica con semantica per il Klingon, da noi sviluppata.
 
-## Componenti del gruppo
-- **Gianluca Barmina** 884084
-- **Marco Amato** 882348
+Il parametro opzionale `0` o `1` permette di scegliere se stampare ogni step dell'esecuzione di CKY o meno.
+  
 
 ## Note Aggiuntive
 - La grammatica Klingon può non essere completa e potrebbe richiedere ulteriori regole per coprire una vasta gamma di frasi.
-- Assicurati di avere una conoscenza approfondita della lingua Klingon per definire correttamente le regole grammaticali.
 
 ---
 
@@ -280,6 +274,7 @@ I verbi in Klingon possono avere sia suffissi che prefissi.
 - I suffissi indicano dei qualificatori per le azioni del verbo o per la frase intera (E.g. Quando un verbo viene seguito da `'a'` la frase è in forma interrogativa
 
 Quindi abbiamo previsto un sintagma che racchiuda il verbo + eventuali prefissi o suffissi, e lo abbiamo chiamato `VerbCompound`.
+<br>
 La parte principale del verbo è chiamata `Verb`, i prefissi sono chiamati `VerbPrefix` e i suffissi `VerbSuffix`
 
 La composizione dei verbi con i prefissi e suffissi è data da regole che hanno `VerbCompound` come sintagma a sinistra.
@@ -308,7 +303,7 @@ Di conseguenza, per frasi che contengono queste casistiche, gli alberi generati 
 
 ### Risultato dell'esecuzione di CKY
 
-L'esecuzione di CKY sulle frasi fornite ha mostrato che sono tutte sintatticamente corrette. Questo è mostrato dal fatto che nella posizione `[0][n-1]` (dove `n`è la lunghezza della frase) della matrice è presente il simbolo `Sentence` che rappresenta la radice dell'albero sintattico.
+L'esecuzione di CKY sulle frasi fornite ha mostrato che sono tutte sintatticamente corrette. Questo è evidenziato dal fatto che nella posizione `[0][n-1]` (dove `n`è la lunghezza della frase) della matrice è presente il simbolo `Sentence` che rappresenta la radice dell'albero sintattico.
 
 I risultati ci mostrano anche che, nonostante l'ambiguità tra verbo essere e pronomi personali, non ci sia ambiguità sintattica nel parsing intero di nessuna frase. Questo è mostrato dal fatto che nella posizione `[0][n-1]` della matrice è presente il simbolo `Sentence` solo una volta, ossia è stato generato un singolo albero sintattico.
 
@@ -331,29 +326,29 @@ Una volta certi della correttezza logica abbiamo riportato le regole di λ-FoL p
 
 Dato che ci siamo fortemente basati sulle frasi fornite, la grammatica con semantica che abbiamo scritto è molto specifica, è quindi sicuramente corretta per le frasi fornite ma non è detto che lo sia per frasi più complesse.
 
-### Reificazione degli eventi
-
-Per gestire il legame tra verbo e prefissi o suffissi abbiamo usato il meccanismo di reificazione degli eventi visto a lezione.
-Il verbo viene tradotto in una variabile che rappresenta l'azione del verbo (chiamata evento), a cui si legano una serie di componenti (prefissi, suffissi, frase interrogativa, etc..), tra cui il verbo stesso.
-A questo punto è possibile legare un numero di entità arbitrario all'evento (tra cui prefissi e suffissi). 
-
-E.g. semantica di "Dajatlh"
-```
-IV[SEM=<λQ λX.∃ e.(X(λx.speak(e,you,x)) ^ Q(e))>] -> "Dajatlh"
-```
-In questo caso il parlare è trattato come un evento (`e`) a cui verrà poi associata l'informazione sulla forma interrogativa della frase.
-
-Lo stesso ragionamento è stato fatto per alcuni sostantivi con prefisso, oppure per la frase interrogativa.
-
-
-
-
 ### Determiners
 
 In alcune frasi fornite dalla consegna appaiono nomi comuni. Queste frasi, tradotte in inglese o in italiano, portano il nome accompagnato dall'articolo determinativo (E.g. pa' -> la stanza).
-Abbiamo quindi tradotto i terminali di questo tipo di modo da rappresentare il significato di un nome preceduto da un articolo determinativo. Ovvero, se in una frase parlo del bambino (e non di un bambino qualsiasi) e successivamente mi riferisco nuovamente al bambino, a livello semantico mi riferisco alla stessa entità.
+<br>
+Abbiamo quindi tradotto i terminali di questo tipo in modo da rappresentare il significato di un nome preceduto da un articolo determinativo. Ovvero, se in una frase parlo del bambino (e non di un bambino qualsiasi) e successivamente mi riferisco nuovamente al bambino, a livello semantico mi riferisco alla stessa entità.
 
 E.g semantica di "The Child"
 ```
-DetNoun[SEM=<λQ. ∃c.((child(c) & Q(c)) ^ ∀ y.(child(y) -> (c = y)))>] -> "puq"
+DetNoun[SEM=<λQ. ∃c.((child(c) ^ Q(c)) ^ ∀y.(child(y) -> (c = y)))>] -> "puq"
 ```
+
+### Reificazione degli eventi
+
+In Klingon, suffissi di verbi e nomi possono essere utilizzati per esprimere informazioni aggiuntive che poi si rispecchiano nella semantica della frase.
+Per gestire il legame tra verbo/nome e suffissi abbiamo usato il meccanismo di reificazione degli eventi, in particolare la versione di Davidson, che non prevede una separazione fra _Agent_ e _Patient_ dell'azione.
+<br>
+Abbiamo quindi creato una variabile `e` che rappresenta un evento, essa poi si riferisce sia al verbo, sia al predicato rappresentante l'informazione aggiuntiva data dal suffisso.
+I casi in cui abbiamo utilizzato la reificazione sono:
+  - Suffisso (di verbo) `'a'`: per esprimere la forma interrogativa. In questo caso la semantica relativa alla creazione dell'evento è stata posta nella parte principale del verbo (`Dajatlh`)
+  ```
+  IV[SEM=<λQ λX.∃e.(X(λx.speak(e,you,x)) ^ Q(e))>] -> "Dajatlh"
+  ```
+  - Suffisso (di nome) `Daq`: per esprimere che il nome è un luogo e l'azione si svolge in prossimità di esso. In questo caso la semantica relativa alla creazione dell'evento è stata posta nella parte principale del nome (`pa'`). I predicati relativi al verbo e al fatto che l'azione si svolga in prossimità del luogo sono poi inseriti nella composizione tramite beta reduction.
+  ```
+  DetNoun[SEM=<λQλR.exists r.((room(r) ^ ∃e.(Q(e)(r) ^ R(e)) ^ ∀y.(room(y) -> (r = y))))>] -> "pa'"
+  ```
