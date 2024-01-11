@@ -71,8 +71,11 @@ if __name__ == "__main__":
         print("Invalid or missing argument for printing matrix: (should be 1=True or 0=False) defaulting to False\n")
         print_matrix = False
 
-    test_dummy(print_matrix)
+    # test_dummy(print_matrix)
+    print("||||||||||||||| Testing Jurafsky grammar with CKY |||||||||||||||\n")
     test_jurafsky(print_matrix)
+    print("\n||||||||||||||| Testing Jurafsky grammar with CKY |||||||||||||||\n")
     test_klingon(print_matrix)
-    test_simple_sem()
+    # test_simple_sem()
+    print("\n||||||||||||||| Testing Klingon grammar with semantics |||||||||||||||\n")
     test_klingon_sem()
