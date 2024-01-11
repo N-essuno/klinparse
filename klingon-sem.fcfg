@@ -12,11 +12,7 @@ DetNounCompound[SEM=<?detNoun(?nounSuffix)>] -> DetNoun[SEM=?detNoun] NounSuffix
 
 VerbCompound[SEM=<?v(?verbSuffix)>] -> IV[SEM=?v] VerbSuffix[SEM=?verbSuffix]
 
-NP[SEM=<?det(?nom)> ] -> Det[SEM=?det] Nom[SEM=?nom]
 NP[SEM=?np] -> PropN[SEM=?np]
-
-
-Nom[SEM=?nom] -> N[SEM=?nom]
 
 VP[SEM=?v] -> IV[SEM=?v]
 
@@ -39,8 +35,8 @@ PropN[SEM=<\P.P(klingon_language)>] -> "tlhInganHol"
 PropN[SEM=<\P.P(klingon)>] -> "tlhIngan"
 PropN[SEM=<\P.P(me)>] -> "jIH"
 
+# in proximity of
 NounSuffix[SEM=<\x\y.proximity(x,y)>] -> "Daq"
-
 
 # I am
 IV[SEM=<\x.being(x,me)>] -> "jIHtaH"
